@@ -6,13 +6,13 @@
 (deffacts init-threshold-value-left
     (worst-radius-threshold 16.83)
     (radius-error-threshold 0.63)
-    (mean-texture-threshold 16.19)
+    (mean-texture-1-threshold 16.19)
     (worst-texture-threshold 30.15)
     (mean-smoothness-threshold 0.09)
     (concave-points-error-threshold 0.01)
     (worst-area-threshold 641.60)
     (mean-radius-threshold 13.45)
-    (mean-texture-threshold 28.79))
+    (mean-texture-2-threshold 28.79))
 
 (deffacts init-threshold-value-right
     (worst-perimeter-threshold 114.45)
@@ -22,16 +22,20 @@
     (mean-radius-threshold 13.34))
 
 (defrule breast-cancer-verdict-positive
+    (declare (salience 100))
     (breast-cancer-positive ?positive)
     (breast-cancer-verdict ?value&:(= ?value ?positive))
 =>
-    (printout t "Hasil Prediksi = Terprediksi Kanker Payudara" crlf))
+    (printout t "Hasil Prediksi = Terprediksi Kanker Payudara" crlf)
+    (retract *))
 
 (defrule breast-cancer-verdict-negative
+    (declare (salience 100))
     (breast-cancer-negative ?negative)
     (breast-cancer-verdict ?value&:(= ?value ?negative))
 =>
-    (printout t "Hasil Prediksi = Terprediksi Tidak Kanker Payudara" crlf))
+    (printout t "Hasil Prediksi = Terprediksi Tidak Kanker Payudara" crlf)
+    (retract *))
 
 (defrule ask-for-mean-concave-points  
     (initial-fact)
@@ -58,7 +62,7 @@
     (worst-radius ?value&:(> ?value ?threshold))
 =>
     (printout t "Mean Texture? " )
-    (assert (mean-texture (read))))
+    (assert (mean-texture-1 (read))))
 
 (defrule radius-error-left
     (radius-error-threshold ?threshold)
@@ -74,15 +78,103 @@
     (printout t "Mean Smoothness? " )
     (assert (mean-smoothness (read))))
 
-(defrule mean-texture-left
-    (mean-texture-threshold ?threshold)
-    (mean-texture ?value&:(<= ?value ?threshold))
+(defrule mean-texture-1-left
+    (mean-texture-1-threshold ?threshold)
+    (mean-texture-1 ?value&:(<= ?value ?threshold))
+    (breast-cancer-positive ?positive)
 =>
-    (assert (breast-cancer-verdict 1.0)))
+    (assert (breast-cancer-verdict ?positive)))
 
-(defrule mean-texture-right
-    (mean-texture-threshold ?threshold)
-    (mean-texture ?value&:(> ?value ?threshold))
+(defrule mean-texture-1-right
+    (mean-texture-1-threshold ?threshold)
+    (mean-texture-1 ?value&:(> ?value ?threshold))
 =>
     (printout t "Concave Points Error? " )
     (assert (concave-points-error (read))))
+
+(defrule worst-texture-left
+    (worst-texture-threshold ?threshold)
+    (worst-texture ?value&:(<= ?value ?threshold))
+    (breast-cancer-positive ?positive)
+=>
+    (assert (breast-cancer-verdict ?positive)))
+
+(defrule worst-texture-right
+    (worst-texture-threshold ?threshold)
+    (worst-texture ?value&:(> ?value ?threshold))
+=>
+    (printout t "Worst Area? " )
+    (assert (worst-area (read))))
+
+(defrule mean-smoothness-left
+    (mean-smoothness-threshold ?threshold)
+    (mean-smoothness ?value&:(<= ?value ?threshold))
+    (breast-cancer-positive ?positive)
+=>
+    (assert (breast-cancer-verdict ?positive)))
+
+(defrule mean-smoothness-right
+    (mean-smoothness-threshold ?threshold)
+    (mean-smoothness ?value&:(> ?value ?threshold))
+    (breast-cancer-negative ?negative)
+=>
+    (assert (breast-cancer-verdict ?negative)))
+
+(defrule concave-points-error-left
+    (concave-points-error-threshold ?threshold)
+    (concave-points-error ?value&:(<= ?value ?threshold))
+    (breast-cancer-negative ?negative)
+=>
+    (assert (breast-cancer-verdict ?negative)))
+
+(defrule concave-points-error-right
+    (concave-points-error-threshold ?threshold)
+    (concave-points-error ?value&:(> ?value ?threshold))
+    (breast-cancer-positive ?positive)
+=>
+    (assert (breast-cancer-verdict ?positive)))
+
+(defrule worst-area-left
+    (worst-area-threshold ?threshold)
+    (worst-area ?value&:(<= ?value ?threshold))
+    (breast-cancer-positive ?positive)
+=>
+    (assert (breast-cancer-verdict ?positive)))
+
+(defrule worst-area-right
+    (worst-area-threshold ?threshold)
+    (worst-area ?value&:(> ?value ?threshold))
+=>
+    (printout t "Mean Radius? " )
+    (assert (mean-radius (read))))
+
+(defrule mean-radius-left
+    (mean-radius-threshold ?threshold)
+    (mean-radius ?value&:(<= ?value ?threshold))
+=>
+    (printout t "Mean Texture? " )
+    (assert (mean-texture-2 (read))))
+
+(defrule mean-radius-right
+    (mean-radius-threshold ?threshold)
+    (mean-radius ?value&:(> ?value ?threshold))
+    (breast-cancer-positive ?positive)
+=>
+    (assert (breast-cancer-verdict ?positive)))
+
+(defrule mean-texture-2-left
+    (mean-texture-2-threshold ?threshold)
+    (mean-texture-2 ?value&:(<= ?value ?threshold))
+    (breast-cancer-negative ?negative)
+=>
+    (assert (breast-cancer-verdict ?negative)))
+
+(defrule mean-texture-2-right
+    (mean-texture-2-threshold ?threshold)
+    (mean-texture-2 ?value&:(> ?value ?threshold))
+    (breast-cancer-positive ?positive)
+=>
+    (assert (breast-cancer-verdict ?positive)))
+
+;Bagian Rizal
+(defrule mean-concave-points-right)
