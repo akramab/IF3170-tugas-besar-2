@@ -1,5 +1,7 @@
+(deffacts init-threshold-value-main
+    (mean-concave-points-threshold 0.05))
+    
 (deffacts init-threshold-value-left
-    (mean-concave-points-threshold 0.05)
     (worst-radius-threshold 16.83)
     (radius-error-threshold 0.63)
     (mean-texture-threshold 16.19)
