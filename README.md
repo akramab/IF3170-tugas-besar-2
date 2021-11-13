@@ -1,0 +1,2 @@
+# IF3170-tugas-besar-2
+Pada tugas besar kali ini, kalian akan diminta untuk membuat program sederhana dengan menggunakan CLIPS. Kalian diharuskan merepresentasikan bentuk dari decision tree berikut ke dalam bahasa CLIPS. Berikut adalah decision tree yang dibentuk dengan menggunakan dataset breast cancer dari link berikut. Data ini memiliki 2 buah hasil prediksi, yaitu 1 yang berarti terprediksi terkena penyakit kanker payudara, dan 0 yang berarti terprediksi tidak terkena penyakit tersebut.
