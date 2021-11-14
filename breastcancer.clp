@@ -16,10 +16,10 @@
 
 (deffacts init-threshold-value-right
     (worst-perimeter-threshold 114.45)
-    (worst-texture-threshold 25.65)
+    (worst-texture-2-threshold 25.65)
     (worst-concave-points-threshold 0.17)
     (perimeter-error-threshold 1.56)
-    (mean-radius-threshold 13.34))
+    (mean-radius-2-threshold 13.34))
 
 (defrule breast-cancer-verdict-positive
     (declare (salience 100))
@@ -177,4 +177,79 @@
     (assert (breast-cancer-verdict ?positive)))
 
 ;Bagian Rizal
-(defrule mean-concave-points-right)
+(defrule mean-concave-points-right
+    (mean-concave-points-threshold ?threshold)
+    (mean-concave-points ?value&:(> ?value ?threshold))
+=> 
+    (printout t "Worst Perimeter? ")
+    (assert (worst-perimeter (read))))
+
+(defrule worst-perimeter-left
+    (worst-perimeter-threshold ?threshold)
+    (worst-perimeter ?value&:(<= ?value ?threshold))
+=> 
+    (printout t "Worst texture? ")
+    (assert (worst-texture-2 (read))))
+
+(defrule worst-perimeter-right
+    (worst-perimeter-threshold ?threshold)
+    (worst-perimeter ?value&:(> ?value ?threshold))
+    (breast-cancer-negative ?negative)
+=> 
+    (assert (breast-cancer-verdict ?negative)))
+
+(defrule worst-texture-2-left
+    (worst-texture-2-threshold ?threshold)
+    (worst-texture-2 ?value&:(<= ?value ?threshold))
+=> 
+    (printout t "Worst Concave Points? ")
+    (assert(worst-concave-points (read))))
+
+(defrule worst-texture-2-right
+    (worst-texture-2-threshold ?threshold)
+    (worst-texture-2 ?value&:(> ?value ?threshold))
+=>
+    (printout t "Perimeter Error? ")
+    (assert (perimeter-error (read))))
+
+(defrule worst-concave-points-left
+    (worst-concave-points-threshold ?threshold)
+    (worst-concave-points ?value&:(<= ?value ?threshold))
+    (breast-cancer-positive ?positive)
+=> 
+    (assert(breast-cancer-verdict ?positive)))
+
+(defrule worst-concave-points-right
+    (worst-concave-points-threshold ?threshold)
+    (worst-concave-points ?value&:(> ?value ?threshold))
+    (breast-cancer-negative ?negative)
+=> 
+    (assert (breast-cancer-verdict ?negative)))
+
+(defrule perimeter-error-left
+    (perimeter-error-threshold ?threshold)
+    (perimeter-error ?value&:(<= ?value ?threshold))
+=> 
+    (printout t "Mean Radius? ")
+    (assert (mean-radius-2 (read))))
+
+(defrule perimeter-error-right
+    (perimeter-error-threshold ?threshold)
+    (perimeter-error ?value&:(> ?value ?threshold))
+    (breast-cancer-negative ?negative)
+=> 
+    (assert (breast-cancer-verdict ?negative)))
+
+(defrule mean-radius-2-left
+    (mean-radius-2-threshold ?threshold)
+    (mean-radius-2 ?value&:(<= ?value ?threshold))
+    (breast-cancer-negative ?negative)
+=> 
+    (assert (breast-cancer-verdict ?negative)))
+
+(defrule mean-radius-2-right
+    (mean-radius-2-threshold ?threshold)
+    (mean-radius-2 ?value&:(> ?value ?threshold))
+    (breast-cancer-positive ?positive)
+=>
+    (assert (breast-cancer-verdict ?positive)))
