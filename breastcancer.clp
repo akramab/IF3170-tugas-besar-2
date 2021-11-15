@@ -37,12 +37,15 @@
     (printout t "Hasil Prediksi = Terprediksi Tidak Kanker Payudara" crlf)
     (retract *))
 
+;STARTING POINT
 (defrule ask-for-mean-concave-points  
     (initial-fact)
 =>
+    (reset)
     (printout t "Mean Concave Points? ")
     (assert (mean-concave-points (read))))
 
+;MAIN NODE LEFT SIDE
 (defrule mean-concave-points-left
     (mean-concave-points-threshold ?threshold)
     (mean-concave-points ?value&:(<= ?value ?threshold))
@@ -176,7 +179,7 @@
 =>
     (assert (breast-cancer-verdict ?positive)))
 
-;Bagian Rizal
+;MAIN NODE RIGHT SIDE
 (defrule mean-concave-points-right
     (mean-concave-points-threshold ?threshold)
     (mean-concave-points ?value&:(> ?value ?threshold))
@@ -188,7 +191,7 @@
     (worst-perimeter-threshold ?threshold)
     (worst-perimeter ?value&:(<= ?value ?threshold))
 => 
-    (printout t "Worst texture? ")
+    (printout t "Worst Texture? ")
     (assert (worst-texture-2 (read))))
 
 (defrule worst-perimeter-right
